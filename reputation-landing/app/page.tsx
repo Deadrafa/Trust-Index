@@ -283,7 +283,7 @@ export default function Home() {
               Ранний доступ
             </motion.a>
 
-            {/* <button
+            <button
               type="button"
               aria-label="Открыть меню"
               onClick={() => setMobileMenuOpen((v) => !v)}
@@ -309,7 +309,7 @@ export default function Home() {
                   className="absolute left-0 top-3 block h-0.5 w-4 bg-white/50"
                 />
               </div>
-            </button> */}
+            </button>
           </div>
         </div>
 
@@ -323,29 +323,25 @@ export default function Home() {
           className="overflow-hidden border-t border-white/8 lg:hidden"
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm sm:px-6">
-  {navItems.map((item) => {
-    const isActive = activeSection === item.id;
-    return (
-      <button
-        key={item.id}
-        onClick={() => {
-          setMobileMenuOpen(false);
-          document.getElementById(item.id)?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }}
-        className={`rounded-lg px-3 py-2 text-left transition cursor-pointer ${
-          isActive
-            ? "bg-white/8 text-white"
-            : "text-white/70 hover:bg-white/[0.04] hover:text-white"
-        }`}
-      >
-        {/* {item.label} */}
-      </button>
-    );
-  })}
-</div>
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`rounded-lg px-3 py-2 transition ${
+                    isActive
+                      ? "bg-white/8 text-white"
+                      : "text-white/70 hover:bg-white/[0.04] hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+          </div>
         </motion.div>
       </header>
 
