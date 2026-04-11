@@ -136,8 +136,8 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const { scrollY, scrollYProgress } = useScroll();
-  const heroYLeft = useTransform(scrollY, [0, 500], [0, -18]);
-  const heroYRight = useTransform(scrollY, [0, 500], [0, 14]);
+  const heroYLeft = useTransform(scrollY, [0, 500], [0, -10]);
+  const heroYRight = useTransform(scrollY, [0, 500], [0, 6]);
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.id);
@@ -198,7 +198,9 @@ export default function Home() {
       if (contentType.includes("application/json")) {
         data = JSON.parse(raw) as { message?: string };
       } else {
-        throw new Error("Сервер вернул не JSON. Проверь app/api/waitlist/route.ts");
+        throw new Error(
+          "Сервер вернул не JSON. Проверь app/api/waitlist/route.ts"
+        );
       }
 
       if (!response.ok) {
@@ -224,21 +226,21 @@ export default function Home() {
       />
 
       <header className="sticky top-0 z-50 border-b border-white/8 bg-[#07111f]/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: -14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-3"
+            className="flex min-w-0 items-center gap-3"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white">
               <BrandGlyph />
             </div>
-            <div>
-              <div className="text-sm font-semibold uppercase tracking-[0.22em] text-white/90">
+            <div className="min-w-0">
+              <div className="truncate text-sm font-semibold uppercase tracking-[0.22em] text-white/90">
                 Trust Index
               </div>
-              <div className="text-xs text-white/45">
+              <div className="truncate text-xs text-white/45">
                 Платформа оценки доверия и репутации
               </div>
             </div>
@@ -285,7 +287,9 @@ export default function Home() {
             >
               <div className="relative h-4 w-4">
                 <motion.span
-                  animate={mobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                  animate={
+                    mobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
+                  }
                   className="absolute left-0 top-0 block h-0.5 w-4 bg-white"
                 />
                 <motion.span
@@ -293,7 +297,11 @@ export default function Home() {
                   className="absolute left-0 top-[6px] block h-0.5 w-4 bg-white/70"
                 />
                 <motion.span
-                  animate={mobileMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+                  animate={
+                    mobileMenuOpen
+                      ? { rotate: -45, y: -6 }
+                      : { rotate: 0, y: 0 }
+                  }
                   className="absolute left-0 top-3 block h-0.5 w-4 bg-white/50"
                 />
               </div>
@@ -310,7 +318,7 @@ export default function Home() {
           }
           className="overflow-hidden border-t border-white/8 lg:hidden"
         >
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-6 py-4 text-sm">
+          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm sm:px-6">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
 
@@ -335,27 +343,32 @@ export default function Home() {
 
       <section className="relative border-b border-white/8">
         <motion.div
-          className="mx-auto grid max-w-7xl gap-14 px-6 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24"
+          className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:py-24"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
           variants={staggerWrap}
         >
-          <motion.div style={{ y: heroYLeft }} variants={fadeUp}>
-            
+          <motion.div
+            style={{ y: heroYLeft }}
+            variants={fadeUp}
+            className="order-1"
+          >
 
             <motion.h1
               variants={fadeUp}
-              className="max-w-4xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-6xl"
+              className="max-w-4xl text-[30px] font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl"
             >
               Платформа оценки доверия
               <br />
-              <span className="text-[#60a5fa]">для более прозрачных решений</span>
+              <span className="text-[#60a5fa]">
+                для более прозрачных решений
+              </span>
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="mt-6 max-w-2xl text-base leading-8 text-white/65 md:text-lg"
+              className="mt-5 max-w-2xl text-sm leading-7 text-white/65 sm:text-base md:text-lg"
             >
               Концепция сервиса, который помогает понимать уровень надёжности
               человека, исполнителя или участника сообщества на основе
@@ -363,12 +376,15 @@ export default function Home() {
               сигналов.
             </motion.p>
 
-            <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <motion.div
+              variants={fadeUp}
+              className="mt-7 flex flex-col gap-3 sm:flex-row"
+            >
               <motion.a
                 whileHover={{ y: -2, scale: 1.01 }}
                 whileTap={{ scale: 0.985 }}
                 href="#waitlist"
-                className="rounded-xl bg-[#3b82f6] px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#2563eb]"
+                className="rounded-xl bg-[#3b82f6] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#2563eb]"
               >
                 Получить ранний доступ
               </motion.a>
@@ -376,21 +392,33 @@ export default function Home() {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.985 }}
                 href="#how"
-                className="rounded-xl border border-white/10 bg-white/5 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/8"
+                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/8"
               >
                 Посмотреть модель
               </motion.a>
             </motion.div>
 
-            <div className="mt-10 grid max-w-2xl gap-4 sm:grid-cols-3">
-              <AnimatedStatCard target={120} suffix="+" label="заявок в лист ожидания" />
-              <AnimatedStatCard target={94} suffix="%" label="позитивных оценок концепта" />
+            <div className="mt-8 grid grid-cols-1 gap-3 xs:grid-cols-2 sm:grid-cols-3">
+              <AnimatedStatCard
+                target={120}
+                suffix="+"
+                label="заявок в лист ожидания"
+              />
+              <AnimatedStatCard
+                target={94}
+                suffix="%"
+                label="позитивных оценок концепта"
+              />
               <AnimatedStatCard target={842} label="пример trust score" />
             </div>
           </motion.div>
 
-          <motion.div style={{ y: heroYRight }} variants={fadeUp}>
-            <HeroAnalyticsPanel />
+          <motion.div
+            style={{ y: heroYRight }}
+            variants={fadeUp}
+            className="order-2 mx-auto w-full max-w-[520px] lg:max-w-none"
+          >
+            <HeroAnalyticsPanel mobileFriendly />
           </motion.div>
         </motion.div>
       </section>
@@ -414,8 +442,12 @@ export default function Home() {
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/8 bg-white/5">
                   <ProblemIcon />
                 </div>
-                <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-white/58">{item.text}</p>
+                <h3 className="text-xl font-semibold text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-white/58">
+                  {item.text}
+                </p>
               </DarkCard>
             </motion.div>
           ))}
@@ -423,7 +455,7 @@ export default function Home() {
       </Section>
 
       <section id="how" className="border-y border-white/8 bg-[#0b1628]/70">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <motion.div
             className="mb-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
             initial="hidden"
@@ -444,7 +476,10 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <motion.div variants={staggerWrap} className="grid gap-3 sm:grid-cols-2">
+            <motion.div
+              variants={staggerWrap}
+              className="grid gap-3 sm:grid-cols-2"
+            >
               {principles.map((item) => (
                 <motion.div
                   key={item}
@@ -487,7 +522,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
         <motion.div
           className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr]"
           variants={staggerWrap}
@@ -520,7 +555,7 @@ export default function Home() {
           <motion.div variants={fadeUp}>
             <motion.div
               whileHover={{ y: -4 }}
-              className="rounded-3xl border border-[#3b82f6]/15 bg-[linear-gradient(180deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))] p-8 shadow-[0_20px_80px_rgba(0,0,0,0.25)]"
+              className="rounded-3xl border border-[#3b82f6]/15 bg-[linear-gradient(180deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.25)] sm:p-8"
             >
               <div className="text-sm font-medium uppercase tracking-[0.22em] text-blue-300">
                 Аналитический слой
@@ -552,20 +587,22 @@ export default function Home() {
               </motion.div>
 
               <div className="mt-6 rounded-2xl border border-white/8 bg-[#08101d] p-5">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div>
-                    <div className="text-sm text-white/45">Общий trust score</div>
+                    <div className="text-sm text-white/45">
+                      Общий trust score
+                    </div>
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.15 }}
-                      className="mt-1 text-3xl font-semibold text-white"
+                      className="mt-1 text-2xl font-semibold text-white sm:text-3xl"
                     >
                       842 / 1000
                     </motion.div>
                   </div>
-                  <div className="rounded-full border border-emerald-400/15 bg-emerald-400/10 px-3 py-1 text-sm font-medium text-emerald-300">
+                  <div className="rounded-full border border-emerald-400/15 bg-emerald-400/10 px-2.5 py-1 text-xs font-medium text-emerald-300 sm:px-3 sm:text-sm">
                     высокий уровень
                   </div>
                 </div>
@@ -580,13 +617,17 @@ export default function Home() {
                       initial={{ width: 0 }}
                       whileInView={{ width: "84%" }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{
+                        duration: 1.2,
+                        delay: 0.2,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                       className="h-full rounded-full bg-[#3b82f6]"
                     />
                   </div>
                 </div>
 
-                <div className="mt-6 flex h-24 items-end gap-3">
+                <div className="mt-6 flex h-24 items-end gap-2 sm:gap-3">
                   <Bar height="28%" delay={0.05} />
                   <Bar height="36%" delay={0.1} />
                   <Bar height="44%" delay={0.15} />
@@ -602,7 +643,7 @@ export default function Home() {
       </section>
 
       <section id="cases" className="border-y border-white/8 bg-[#0b1628]/70">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -618,7 +659,10 @@ export default function Home() {
               </h2>
             </motion.div>
 
-            <motion.div variants={staggerWrap} className="grid gap-6 lg:grid-cols-3">
+            <motion.div
+              variants={staggerWrap}
+              className="grid gap-6 lg:grid-cols-3"
+            >
               {useCases.map((item) => (
                 <motion.div key={item.title} variants={fadeUp}>
                   <motion.div
@@ -644,13 +688,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
         <motion.div
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
           variants={fadeUp}
-          className="rounded-3xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.03))] p-8 md:p-10"
+          className="rounded-3xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.03))] p-6 sm:p-8 md:p-10"
         >
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
@@ -658,7 +702,8 @@ export default function Home() {
                 Позиционирование
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Этот продукт должен восприниматься как инструмент доверия, а не контроля
+                Этот продукт должен восприниматься как инструмент доверия, а не
+                контроля
               </h2>
               <p className="mt-4 text-white/60">
                 Поэтому сайт построен вокруг спокойной корпоративной подачи,
@@ -699,9 +744,12 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section id="waitlist" className="mx-auto max-w-7xl px-6 py-20">
+      <section
+        id="waitlist"
+        className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20"
+      >
         <motion.div
-          className="grid gap-10 lg:grid-cols-[1fr_430px]"
+          className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_430px]"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.15 }}
@@ -720,22 +768,35 @@ export default function Home() {
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <ScoreCard value="10%+" label="минимум" text="есть базовый интерес" />
-              <ScoreCard value="20%+" label="хорошо" text="гипотеза выглядит сильной" />
-              <ScoreCard value="30%+" label="очень хорошо" text="можно идти дальше" />
+              <ScoreCard
+                value="10%+"
+                label="минимум"
+                text="есть базовый интерес"
+              />
+              <ScoreCard
+                value="20%+"
+                label="хорошо"
+                text="гипотеза выглядит сильной"
+              />
+              <ScoreCard
+                value="30%+"
+                label="очень хорошо"
+                text="можно идти дальше"
+              />
             </div>
           </motion.div>
 
           <motion.div variants={fadeUp}>
             <motion.div
               whileHover={{ y: -4 }}
-              className="rounded-3xl border border-white/8 bg-[#0b1628] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.22)]"
+              className="rounded-3xl border border-white/8 bg-[#0b1628] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.22)] sm:p-6"
             >
               <div className="text-xl font-semibold text-white">
                 Ранний доступ
               </div>
               <p className="mt-2 text-sm leading-6 text-white/55">
-                Оставьте контакт и коротко опишите, где вам был бы полезен такой сервис.
+                Оставьте контакт и коротко опишите, где вам был бы полезен такой
+                сервис.
               </p>
 
               <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -811,7 +872,10 @@ export default function Home() {
                     maxLength={1000}
                     value={form.useCase}
                     onChange={(e) =>
-                      setForm((prev) => ({ ...prev, useCase: e.target.value }))
+                      setForm((prev) => ({
+                        ...prev,
+                        useCase: e.target.value,
+                      }))
                     }
                     placeholder="Например: найм, аренда, сделки, платформа, сообщество"
                     className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none placeholder:text-white/30 focus:border-[#3b82f6]"
@@ -834,7 +898,9 @@ export default function Home() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`text-sm ${
-                      status === "success" ? "text-emerald-300" : "text-red-300"
+                      status === "success"
+                        ? "text-emerald-300"
+                        : "text-red-300"
                     }`}
                   >
                     {message}
@@ -847,7 +913,7 @@ export default function Home() {
       </section>
 
       <section id="faq" className="border-t border-white/8 bg-[#0b1628]/70">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <motion.div
             initial="hidden"
             whileInView="show"
@@ -876,9 +942,11 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setOpenFaq(isOpen ? null : index)}
-                      className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-6"
                     >
-                      <span className="text-lg font-semibold text-white">{item.q}</span>
+                      <span className="text-base font-semibold text-white sm:text-lg">
+                        {item.q}
+                      </span>
 
                       <motion.span
                         animate={{ rotate: isOpen ? 45 : 0 }}
@@ -896,10 +964,13 @@ export default function Home() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
                           className="overflow-hidden"
                         >
-                          <div className="px-6 pb-6 text-sm leading-7 text-white/58">
+                          <div className="px-5 pb-6 text-sm leading-7 text-white/58 sm:px-6">
                             {item.a}
                           </div>
                         </motion.div>
@@ -972,7 +1043,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="mx-auto max-w-7xl px-6 py-20">
+    <section id={id} className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
       <motion.div
         className="mb-10 max-w-2xl"
         initial="hidden"
@@ -1123,58 +1194,66 @@ function Bar({
       whileInView={{ height, opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`w-8 rounded-t-md ${
+      className={`w-5 rounded-t-md sm:w-6 lg:w-8 ${
         highlight ? "bg-[#3b82f6]" : "bg-white/20"
       }`}
     />
   );
 }
 
-function HeroAnalyticsPanel() {
+function HeroAnalyticsPanel({
+  mobileFriendly = false,
+}: {
+  mobileFriendly?: boolean;
+}) {
   return (
-    <div className="relative rounded-[28px] border border-white/8 bg-[#0c172a] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.28)]">
-      <div className="absolute inset-0 rounded-[28px] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_30%)]" />
-      <div className="relative rounded-[22px] border border-white/8 bg-[#08101d] p-6">
-        <div className="flex items-center justify-between">
+    <div
+      className={`relative overflow-hidden rounded-[22px] border border-white/8 bg-[#0c172a] shadow-[0_24px_80px_rgba(0,0,0,0.28)] ${
+        mobileFriendly ? "p-2.5 sm:p-4" : "p-3 sm:p-4"
+      }`}
+    >
+      <div className="absolute inset-0 rounded-[22px] bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_30%)] sm:rounded-[28px]" />
+      <div className="relative rounded-[18px] border border-white/8 bg-[#08101d] p-3.5 sm:rounded-[22px] sm:p-6">
+        <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-sm text-white/45">Trust profile overview</div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mt-1 text-3xl font-semibold text-white"
+              className="mt-1 text-2xl font-semibold text-white sm:text-3xl"
             >
               842 / 1000
             </motion.div>
           </div>
-          <div className="rounded-full border border-emerald-400/15 bg-emerald-400/10 px-3 py-1 text-sm font-medium text-emerald-300">
+          <div className="rounded-full border border-emerald-400/15 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300 sm:px-3 sm:text-sm">
             высокий уровень
           </div>
         </div>
 
-        <div className="mt-6 rounded-2xl border border-white/8 bg-[#0c172a] p-5">
+        <div className="mt-5 rounded-2xl border border-white/8 bg-[#0c172a] p-4 sm:mt-6 sm:p-5">
           <div className="flex items-center gap-4">
             <motion.div
               whileHover={{ rotate: 2, scale: 1.02 }}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-sm font-semibold text-white/90"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/8 bg-white/5 text-sm font-semibold text-white/90 sm:h-14 sm:w-14"
             >
               VM
             </motion.div>
             <div>
               <div className="text-sm text-white/45">Профиль</div>
-              <div className="text-lg font-semibold text-white">
+              <div className="text-base font-semibold text-white sm:text-lg">
                 Verified Member
               </div>
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-3">
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:mt-6 sm:grid-cols-3">
             <InfoBox title="Отзывы" value="94%" />
             <InfoBox title="Сделки" value="27" />
             <InfoBox title="Жалобы" value="1" />
           </div>
 
-          <div className="mt-6">
+          <div className="mt-5 sm:mt-6">
             <div className="mb-2 flex items-center justify-between text-xs text-white/45">
               <span>Индекс доверия</span>
               <span>84.2%</span>
@@ -1191,7 +1270,7 @@ function HeroAnalyticsPanel() {
           </div>
         </div>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div className="rounded-2xl border border-white/8 bg-[#0c172a] p-4">
             <div className="text-sm text-white/45">Динамика репутации</div>
             <div className="mt-4 flex h-24 items-end gap-2">
@@ -1207,22 +1286,24 @@ function HeroAnalyticsPanel() {
 
           <div className="rounded-2xl border border-white/8 bg-[#0c172a] p-4">
             <div className="text-sm text-white/45">Факторы оценки</div>
-            <div className="mt-5 space-y-2">
+            <div className="mt-4 space-y-2">
               {[
-  ["Подтверждённые отзывы", "35%"],
-  ["Стабильность действий", "25%"],
-  ["История взаимодействий", "40%"],
-].map(([label, value], index) => (
+                ["Подтверждённые отзывы", "35%"],
+                ["Стабильность действий", "25%"],
+                ["История взаимодействий", "40%"],
+              ].map(([label, value], index) => (
                 <motion.div
                   key={label}
                   initial={{ opacity: 0, x: 12 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08 }}
-                  className="flex items-center justify-between rounded-xl bg-white/[0.04] px-3 py-2 text-xs"
+                  className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.04] px-3 py-2 text-xs"
                 >
                   <span className="text-white/58">{label}</span>
-                  <span className="font-medium text-white/85">{value}</span>
+                  <span className="shrink-0 font-medium text-white/85">
+                    {value}
+                  </span>
                 </motion.div>
               ))}
             </div>
@@ -1241,7 +1322,9 @@ function InfoBox({ title, value }: { title: string; value: string }) {
       className="rounded-xl border border-white/8 bg-white/[0.04] p-3"
     >
       <div className="text-xs text-white/45">{title}</div>
-      <div className="mt-1 text-lg font-semibold text-white">{value}</div>
+      <div className="mt-1 text-base font-semibold text-white sm:text-lg">
+        {value}
+      </div>
     </motion.div>
   );
 }
@@ -1295,7 +1378,7 @@ function ScrollToTop() {
               behavior: "smooth",
             })
           }
-          className="fixed bottom-6 right-6 z-[60] flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-[#0c172a] shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-md transition hover:border-white/20"
+          className="fixed bottom-5 right-5 z-[60] flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-[#0c172a] shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-md transition hover:border-white/20 sm:bottom-6 sm:right-6"
         >
           <ArrowUpIcon />
         </motion.button>
@@ -1326,7 +1409,13 @@ function ArrowUpIcon() {
 
 function BrandGlyph() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
       <path
         d="M12 3L19 7V12C19 16.2 16.3 19.8 12 21C7.7 19.8 5 16.2 5 12V7L12 3Z"
         stroke="currentColor"
