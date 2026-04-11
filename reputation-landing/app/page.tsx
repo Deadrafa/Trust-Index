@@ -283,7 +283,7 @@ export default function Home() {
               Ранний доступ
             </motion.a>
 
-            <button
+            {/* <button
               type="button"
               aria-label="Открыть меню"
               onClick={() => setMobileMenuOpen((v) => !v)}
@@ -309,7 +309,7 @@ export default function Home() {
                   className="absolute left-0 top-3 block h-0.5 w-4 bg-white/50"
                 />
               </div>
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -341,7 +341,7 @@ export default function Home() {
             : "text-white/70 hover:bg-white/[0.04] hover:text-white"
         }`}
       >
-        {item.label}
+        {/* {item.label} */}
       </button>
     );
   })}
@@ -388,17 +388,14 @@ export default function Home() {
               variants={fadeUp}
               className="mt-7 flex flex-col gap-3 sm:flex-row"
             >
-              <motion.button
-  onClick={() => {
-    document.getElementById("waitlist")?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    });
-  }}
-  className="hidden rounded-xl border border-[#3b82f6]/20 bg-[#3b82f6] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2563eb] sm:block"
->
-  Ранний доступ
-</motion.button>
+              <motion.a
+                whileHover={{ y: -2, scale: 1.01 }}
+                whileTap={{ scale: 0.985 }}
+                href="#waitlist"
+                className="rounded-xl bg-[#3b82f6] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#2563eb]"
+              >
+                Получить ранний доступ
+              </motion.a>
               <motion.a
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.985 }}
