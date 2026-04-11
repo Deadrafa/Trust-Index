@@ -59,3 +59,12 @@ textarea:focus {
   background: rgba(59, 130, 246, 0.28);
   color: white;
 }
+
+section[id],
+[id="problem"],
+[id="how"],
+[id="cases"],
+[id="waitlist"],
+[id="faq"] {
+  scroll-margin-top: 80px; /* высота хедера ~70px + запас */
+}

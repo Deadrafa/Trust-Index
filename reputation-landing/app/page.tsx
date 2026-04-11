@@ -247,24 +247,28 @@ export default function Home() {
           </motion.div>
 
           <nav className="hidden items-center gap-2 lg:flex">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id;
-
-              return (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className={`rounded-lg px-3 py-2 text-sm transition ${
-                    isActive
-                      ? "bg-white/8 text-white"
-                      : "text-white/55 hover:bg-white/[0.04] hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-          </nav>
+  {navItems.map((item) => {
+    const isActive = activeSection === item.id;
+    return (
+      <button
+        key={item.id}
+        onClick={() => {
+          document.getElementById(item.id)?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }}
+        className={`rounded-lg px-3 py-2 text-sm transition cursor-pointer ${
+          isActive
+            ? "bg-white/8 text-white"
+            : "text-white/55 hover:bg-white/[0.04] hover:text-white"
+        }`}
+      >
+        {item.label}
+      </button>
+    );
+  })}
+</nav>
 
           <div className="flex items-center gap-3">
             <motion.a
@@ -319,25 +323,29 @@ export default function Home() {
           className="overflow-hidden border-t border-white/8 lg:hidden"
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm sm:px-6">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id;
-
-              return (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`rounded-lg px-3 py-2 transition ${
-                    isActive
-                      ? "bg-white/8 text-white"
-                      : "text-white/70 hover:bg-white/[0.04] hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-          </div>
+  {navItems.map((item) => {
+    const isActive = activeSection === item.id;
+    return (
+      <button
+        key={item.id}
+        onClick={() => {
+          setMobileMenuOpen(false);
+          document.getElementById(item.id)?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }}
+        className={`rounded-lg px-3 py-2 text-left transition cursor-pointer ${
+          isActive
+            ? "bg-white/8 text-white"
+            : "text-white/70 hover:bg-white/[0.04] hover:text-white"
+        }`}
+      >
+        {item.label}
+      </button>
+    );
+  })}
+</div>
         </motion.div>
       </header>
 
@@ -380,14 +388,17 @@ export default function Home() {
               variants={fadeUp}
               className="mt-7 flex flex-col gap-3 sm:flex-row"
             >
-              <motion.a
-                whileHover={{ y: -2, scale: 1.01 }}
-                whileTap={{ scale: 0.985 }}
-                href="#waitlist"
-                className="rounded-xl bg-[#3b82f6] px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#2563eb]"
-              >
-                Получить ранний доступ
-              </motion.a>
+              <motion.button
+  onClick={() => {
+    document.getElementById("waitlist")?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }}
+  className="hidden rounded-xl border border-[#3b82f6]/20 bg-[#3b82f6] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2563eb] sm:block"
+>
+  Ранний доступ
+</motion.button>
               <motion.a
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.985 }}
