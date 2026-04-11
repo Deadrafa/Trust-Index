@@ -283,7 +283,7 @@ export default function Home() {
               Ранний доступ
             </motion.a>
 
-            <button
+            {/* <button
               type="button"
               aria-label="Открыть меню"
               onClick={() => setMobileMenuOpen((v) => !v)}
@@ -309,11 +309,11 @@ export default function Home() {
                   className="absolute left-0 top-3 block h-0.5 w-4 bg-white/50"
                 />
               </div>
-            </button>
+            </button> */}
           </div>
         </div>
 
-        <motion.div
+        {/* <motion.div
           initial={false}
           animate={
             mobileMenuOpen
@@ -342,7 +342,7 @@ export default function Home() {
               );
             })}
           </div>
-        </motion.div>
+        </motion.div> */}
       </header>
 
       <section className="relative border-b border-white/8">
