@@ -1,102 +1,119 @@
-import { NextRequest, NextResponse } from "next/server";
+import dns from "node:dns";
+import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
+dns.setDefaultResultOrder("ipv4first");
 
 type WaitlistPayload = {
   name?: string;
   email?: string;
   useCase?: string;
-  company?: string; 
+  company?: string;
 };
 
-export async function POST(request: NextRequest) {
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export async function POST(request: Request) {
   try {
-    const contentType = request.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) {
-      return NextResponse.json(
-        { message: "Неверный Content-Type" },
-        { status: 415 }
-      );
+    const body = (await request.json()) as WaitlistPayload;
+
+    const name = body.name?.trim() || "";
+    const email = body.email?.trim() || "";
+    const useCase = body.useCase?.trim() || "";
+    const company = body.company?.trim() || "";
+
+    if (company) {
+      return NextResponse.json({ message: "Заявка отправлена." });
     }
-
-    const rawBody = await request.text();
-
-    if (!rawBody) {
-      return NextResponse.json(
-        { message: "Пустой запрос" },
-        { status: 400 }
-      );
-    }
-
-
-    let body: WaitlistPayload;
-    try {
-      body = JSON.parse(rawBody);
-    } catch {
-      return NextResponse.json(
-        { message: "Некорректный JSON" },
-        { status: 400 }
-      );
-    }
-
-  
-    if (body.company?.trim()) {
-      return NextResponse.json(
-        { message: "Заявка принята" },
-        { status: 200 }
-      );
-    }
-
-
-    const name = body.name?.trim();
-    const email = body.email?.trim().toLowerCase();
-    const useCase = body.useCase?.trim();
 
     if (!name || !email || !useCase) {
       return NextResponse.json(
-        { message: "Заполните все поля" },
+        { message: "Заполните имя, email и сценарий применения." },
         { status: 400 }
       );
     }
 
- 
-    const emailIsValid =
-      /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email);
-
-    if (!emailIsValid) {
+    if (!isValidEmail(email)) {
       return NextResponse.json(
-        { message: "Введите корректный email" },
+        { message: "Введите корректный email." },
         { status: 400 }
       );
     }
 
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
 
-    const entry = {
-      name,
-      email,
-      useCase,
-      ip:
-        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-        request.headers.get("x-real-ip") ||
-        "unknown",
-      userAgent: request.headers.get("user-agent") || "",
-      createdAt: new Date().toISOString(),
-    };
+    if (!botToken || !chatId) {
+      return NextResponse.json(
+        { message: "Не настроена отправка заявок." },
+        { status: 500 }
+      );
+    }
 
+    const text = [
+      "🔥 <b>Новая заявка с лендинга</b>",
+      "",
+      `👤 <b>Имя:</b> ${escapeHtml(name)}`,
+      `📧 <b>Email:</b> ${escapeHtml(email)}`,
+      "",
+      `🧩 <b>Сценарий:</b>`,
+      escapeHtml(useCase),
+    ].join("\n");
 
-    console.log("=== NEW WAITLIST LEAD ===");
-    console.log(JSON.stringify(entry, null, 2));
-    console.log("=== END ===");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    let response: Response;
+
+    try {
+      response = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: "HTML",
+            disable_web_page_preview: true,
+          }),
+          cache: "no-store",
+          signal: controller.signal,
+        }
+      );
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) {
+      console.error("Telegram error:", data);
+      return NextResponse.json(
+        { message: data.description || "Не удалось отправить заявку." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
-      { message: "Заявка принята" },
+      { message: "Заявка отправлена. Спасибо!" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("WAITLIST ERROR:", error);
+    console.error("Waitlist route error:", error);
 
     return NextResponse.json(
-      { message: "Ошибка сервера" },
+      { message: "Произошла ошибка при отправке заявки." },
       { status: 500 }
     );
   }

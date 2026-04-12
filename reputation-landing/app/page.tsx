@@ -28,16 +28,19 @@ const initialForm: FormState = {
 
 const painPoints = [
   {
-    title: "Недостаток прозрачности",
-    text: "Во многих сценариях решение о доверии принимается почти вслепую: без структуры, единого индикатора и понятной истории.",
+    title: "Слишком мало прозрачности",
+    text: "Во многих сценариях решение о доверии принимается без структуры, без понятной логики и без единой картины надёжности.",
+    icon: "◐",
   },
   {
-    title: "Слабые сигналы качества",
-    text: "Отзывы часто разрознены, субъективны или не отражают полную картину надёжности человека или исполнителя.",
+    title: "Сигналы качества разрознены",
+    text: "Отзывы, рекомендации и история взаимодействий часто существуют отдельно друг от друга и не помогают быстро оценить ситуацию.",
+    icon: "◎",
   },
   {
-    title: "Высокая цена ошибки",
-    text: "Неверное решение в найме, сделке, аренде или сообществе может приводить к потерям времени, денег и доверия.",
+    title: "Ошибка обходится дорого",
+    text: "Неверное решение в найме, сделке, аренде или сообществе может стоить времени, денег, репутации и доверия.",
+    icon: "◈",
   },
 ] as const;
 
@@ -45,17 +48,17 @@ const processSteps = [
   {
     number: "01",
     title: "Профиль",
-    text: "Пользователь создаёт профиль и проходит базовое подтверждение данных.",
+    text: "Пользователь создаёт профиль и проходит базовое подтверждение ключевых данных.",
   },
   {
     number: "02",
     title: "Сигналы доверия",
-    text: "Система учитывает отзывы, историю взаимодействий, стабильность и подтверждённые действия.",
+    text: "Система учитывает подтверждённые действия, отзывы, стабильность и историю взаимодействий.",
   },
   {
     number: "03",
     title: "Индекс",
-    text: "Формируется понятный trust score с прозрачными основаниями и динамикой изменений.",
+    text: "Формируется итоговая оценка с прозрачными основаниями и понятной динамикой изменений.",
   },
   {
     number: "04",
@@ -67,37 +70,52 @@ const processSteps = [
 const useCases = [
   {
     title: "Найм и подрядчики",
-    text: "Дополнительный слой оценки для кандидатов, фрилансеров, исполнителей и партнёров.",
+    text: "Дополнительный сигнал для оценки кандидатов, фрилансеров, исполнителей и партнёров до начала сотрудничества.",
   },
   {
     title: "Сделки и аренда",
-    text: "Снижение риска при выборе человека для частного сотрудничества, сделки или аренды.",
+    text: "Более понятная картина надёжности при выборе человека для частного сотрудничества, сделки или аренды.",
   },
   {
     title: "Сообщества и платформы",
-    text: "Формирование прозрачной среды, где репутация влияет на доверие и качество взаимодействия.",
+    text: "Прозрачная среда, где репутация помогает усиливать качество взаимодействия и снижать уровень риска.",
   },
 ] as const;
 
 const principles = [
-  "Понятная методика оценки",
+  "Понятная логика оценки",
   "Прозрачные основания рейтинга",
-  "История изменений, а не только цифра",
-  "Фокус на доверии, а не на наказании",
+  "История изменений профиля",
+  "Фокус на доверии и надёжности",
+] as const;
+
+const trustSignals = [
+  {
+    title: "Подтверждённые действия",
+    text: "Сделки, завершённые задачи и другие верифицируемые события усиливают доверие к профилю.",
+  },
+  {
+    title: "Репутационные сигналы",
+    text: "Отзывы, повторные взаимодействия и качество обратной связи помогают увидеть контекст, а не только цифру.",
+  },
+  {
+    title: "Стабильность профиля",
+    text: "Предсказуемость поведения и история активности позволяют оценивать надёжность в динамике.",
+  },
 ] as const;
 
 const faq = [
   {
     q: "Это система контроля над людьми?",
-    a: "Нет. Концепция подаётся как инструмент доверия и прозрачности, который помогает принимать более обоснованные решения в реальных сценариях.",
+    a: "Нет. Продукт задуман как инструмент прозрачности и дополнительной оценки надёжности, который помогает принимать более обоснованные решения.",
   },
   {
     q: "Откуда берётся рейтинг?",
-    a: "Из набора понятных сигналов: подтверждённых действий, отзывов, истории взаимодействий, стабильности и других факторов, которые можно объяснить пользователю.",
+    a: "Оценка складывается из понятных сигналов: подтверждённых действий, отзывов, истории взаимодействий, стабильности и других факторов, которые можно объяснить пользователю.",
   },
   {
-    q: "Зачем нужен сайт на этом этапе?",
-    a: "Чтобы проверить интерес к идее: смотрят ли люди страницу, понимают ли ценность и готовы ли оставить заявку на ранний доступ.",
+    q: "Это заменяет личное решение?",
+    a: "Нет. Индекс доверия не заменяет выбор человека или компании, а даёт дополнительный структурированный сигнал для более уверенного решения.",
   },
 ] as const;
 
@@ -131,13 +149,17 @@ export default function Home() {
   const [form, setForm] = useState<FormState>(initialForm);
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [message, setMessage] = useState("");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("problem");
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [mounted, setMounted] = useState(false);
 
   const { scrollY, scrollYProgress } = useScroll();
   const heroYLeft = useTransform(scrollY, [0, 500], [0, -10]);
   const heroYRight = useTransform(scrollY, [0, 500], [0, 6]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const sectionIds = navItems.map((item) => item.id);
@@ -167,14 +189,14 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const isDisabled = useMemo(() => {
-    return (
-      status === "loading" ||
-      !form.name.trim() ||
-      !form.email.trim() ||
-      !form.useCase.trim()
-    );
-  }, [form, status]);
+  const isDisabled =
+    !mounted ||
+    status === "loading" ||
+    !form.name.trim() ||
+    !form.email.trim() ||
+    !form.useCase.trim();
+
+
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -220,6 +242,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#07111f] text-white">
+      <GridGlow />
       <motion.div
         style={{ scaleX: scrollYProgress }}
         className="fixed left-0 right-0 top-0 z-[60] h-[2px] origin-left bg-[#3b82f6]"
@@ -247,28 +270,28 @@ export default function Home() {
           </motion.div>
 
           <nav className="hidden items-center gap-2 lg:flex">
-  {navItems.map((item) => {
-    const isActive = activeSection === item.id;
-    return (
-      <button
-        key={item.id}
-        onClick={() => {
-          document.getElementById(item.id)?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }}
-        className={`rounded-lg px-3 py-2 text-sm transition cursor-pointer ${
-          isActive
-            ? "bg-white/8 text-white"
-            : "text-white/55 hover:bg-white/[0.04] hover:text-white"
-        }`}
-      >
-        {item.label}
-      </button>
-    );
-  })}
-</nav>
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    document.getElementById(item.id)?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                  className={`rounded-lg px-3 py-2 text-sm transition cursor-pointer ${
+                    isActive
+                      ? "bg-white/8 text-white"
+                      : "text-white/55 hover:bg-white/[0.04] hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </nav>
 
           <div className="flex items-center gap-3">
             <motion.a
@@ -282,67 +305,8 @@ export default function Home() {
             >
               Ранний доступ
             </motion.a>
-
-            {/* <button
-              type="button"
-              aria-label="Открыть меню"
-              onClick={() => setMobileMenuOpen((v) => !v)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 lg:hidden"
-            >
-              <div className="relative h-4 w-4">
-                <motion.span
-                  animate={
-                    mobileMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }
-                  }
-                  className="absolute left-0 top-0 block h-0.5 w-4 bg-white"
-                />
-                <motion.span
-                  animate={mobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
-                  className="absolute left-0 top-[6px] block h-0.5 w-4 bg-white/70"
-                />
-                <motion.span
-                  animate={
-                    mobileMenuOpen
-                      ? { rotate: -45, y: -6 }
-                      : { rotate: 0, y: 0 }
-                  }
-                  className="absolute left-0 top-3 block h-0.5 w-4 bg-white/50"
-                />
-              </div>
-            </button> */}
           </div>
         </div>
-
-        {/* <motion.div
-          initial={false}
-          animate={
-            mobileMenuOpen
-              ? { height: "auto", opacity: 1 }
-              : { height: 0, opacity: 0 }
-          }
-          className="overflow-hidden border-t border-white/8 lg:hidden"
-        >
-          <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm sm:px-6">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.id;
-
-              return (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`rounded-lg px-3 py-2 transition ${
-                    isActive
-                      ? "bg-white/8 text-white"
-                      : "text-white/70 hover:bg-white/[0.04] hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-          </div>
-        </motion.div> */}
       </header>
 
       <section className="relative border-b border-white/8">
@@ -358,15 +322,22 @@ export default function Home() {
             variants={fadeUp}
             className="order-1"
           >
+            <motion.div
+              variants={fadeUp}
+              className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-xs font-medium text-blue-200"
+            >
+              <span className="h-2 w-2 rounded-full bg-blue-300" />
+              Прозрачная оценка надёжности
+            </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="max-w-4xl text-[30px] font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl md:text-6xl"
+              className="max-w-4xl text-[30px] font-semibold leading-[1.04] tracking-tight text-white sm:text-4xl md:text-6xl"
             >
-              Платформа оценки доверия
+              Индекс доверия
               <br />
               <span className="text-[#60a5fa]">
-                для более прозрачных решений
+                для более уверенных решений
               </span>
             </motion.h1>
 
@@ -374,10 +345,9 @@ export default function Home() {
               variants={fadeUp}
               className="mt-5 max-w-2xl text-sm leading-7 text-white/65 sm:text-base md:text-lg"
             >
-              Концепция сервиса, который помогает понимать уровень надёжности
-              человека, исполнителя или участника сообщества на основе
-              подтверждённых действий, истории взаимодействий и репутационных
-              сигналов.
+              Сервис, который помогает оценивать надёжность человека,
+              исполнителя или участника сообщества на основе подтверждённых
+              действий, истории взаимодействий и репутационных сигналов.
             </motion.p>
 
             <motion.div
@@ -398,20 +368,29 @@ export default function Home() {
                 href="#how"
                 className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-center text-sm font-semibold text-white transition hover:bg-white/8"
               >
-                Посмотреть модель
+                Как это работает
               </motion.a>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3"
+            >
+              <QuickSignal icon="✓" title="Проверяемые сигналы" />
+              <QuickSignal icon="↗" title="История изменений" />
+              <QuickSignal icon="◌" title="Понятная логика оценки" />
             </motion.div>
 
             <div className="mt-8 grid grid-cols-1 gap-3 xs:grid-cols-2 sm:grid-cols-3">
               <AnimatedStatCard
                 target={120}
                 suffix="+"
-                label="заявок в лист ожидания"
+                label="ранних заявок"
               />
               <AnimatedStatCard
                 target={94}
                 suffix="%"
-                label="позитивных оценок концепта"
+                label="позитивной оценки идеи"
               />
               <AnimatedStatCard target={842} label="пример trust score" />
             </div>
@@ -429,9 +408,9 @@ export default function Home() {
 
       <Section
         id="problem"
-        eyebrow="Почему это может быть нужно"
-        title="Проблема доверия возникает регулярно, а инструменты оценки часто слабы"
-        description="Этот сайт не продаёт фантазию. Он показывает практическую гипотезу: можно ли сделать доверие более структурированным и понятным."
+        eyebrow="Почему это важно"
+        title="Когда не хватает прозрачности, цена ошибки становится выше"
+        description="Во многих сценариях люди принимают решения почти вслепую. Цель продукта — сделать оценку надёжности более понятной, структурированной и полезной в реальных ситуациях."
       >
         <motion.div
           className="grid gap-6 lg:grid-cols-3"
@@ -443,8 +422,13 @@ export default function Home() {
           {painPoints.map((item) => (
             <motion.div key={item.title} variants={fadeUp}>
               <DarkCard>
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/8 bg-white/5">
-                  <ProblemIcon />
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/8 bg-white/5 text-lg text-blue-200">
+                    {item.icon}
+                  </div>
+                  <div className="rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 text-xs text-white/45">
+                    риск
+                  </div>
                 </div>
                 <h3 className="text-xl font-semibold text-white">
                   {item.title}
@@ -455,6 +439,59 @@ export default function Home() {
               </DarkCard>
             </motion.div>
           ))}
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeUp}
+          className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]"
+        >
+          <DarkCard className="p-6 sm:p-7">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-400/10 text-blue-200">
+                <DecisionIcon />
+              </div>
+              <div>
+                <div className="text-sm font-medium text-white/88">
+                  Типичная ситуация
+                </div>
+                <div className="text-xs text-white/45">
+                  Решение принимается без единой картины
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <MiniScenario
+                title="Найм"
+                text="Есть резюме и пара отзывов, но нет структуры доверия."
+              />
+              <MiniScenario
+                title="Сделка"
+                text="Нужно быстро понять, насколько человек надёжен."
+              />
+              <MiniScenario
+                title="Сообщество"
+                text="Важно видеть историю взаимодействий и стабильность."
+              />
+            </div>
+          </DarkCard>
+
+          <DarkCard className="p-6 sm:p-7">
+            <div className="text-sm font-medium uppercase tracking-[0.22em] text-white/40">
+              Что меняется
+            </div>
+            <div className="mt-3 text-2xl font-semibold text-white">
+              Вместо разрозненных сигналов — единый профиль доверия
+            </div>
+            <p className="mt-4 text-sm leading-7 text-white/58">
+              Пользователь видит не только число, но и контекст: что повлияло на
+              индекс, какие сигналы подтверждены и как менялась оценка со
+              временем.
+            </p>
+          </DarkCard>
         </motion.div>
       </Section>
 
@@ -469,14 +506,14 @@ export default function Home() {
           >
             <motion.div variants={fadeUp} className="max-w-2xl">
               <div className="text-sm font-medium uppercase tracking-[0.22em] text-white/40">
-                Как это работает
+                Как формируется индекс доверия
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Профиль, сигналы, индекс и понятный результат
+                Профиль, сигналы доверия и прозрачная итоговая оценка
               </h2>
               <p className="mt-4 text-white/60">
-                В основе идеи — не одна абстрактная оценка, а структура, которую
-                можно объяснить и показать пользователю.
+                Индекс строится не на одной цифре, а на наборе понятных
+                сигналов, которые можно показать и объяснить пользователю.
               </p>
             </motion.div>
 
@@ -510,8 +547,11 @@ export default function Home() {
                   whileHover={{ y: -6 }}
                   className="rounded-2xl border border-white/8 bg-white/[0.04] p-6 transition hover:border-white/20 hover:bg-white/[0.06]"
                 >
-                  <div className="text-sm font-semibold text-blue-300">
-                    {step.number}
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-semibold text-blue-300">
+                      {step.number}
+                    </div>
+                    <div className="h-2 w-2 rounded-full bg-blue-300/80" />
                   </div>
                   <h3 className="mt-4 text-xl font-semibold text-white">
                     {step.title}
@@ -520,6 +560,20 @@ export default function Home() {
                     {step.text}
                   </p>
                 </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={staggerWrap}
+            className="mt-8 grid gap-4 lg:grid-cols-3"
+          >
+            {trustSignals.map((item) => (
+              <motion.div key={item.title} variants={fadeUp}>
+                <SignalCard title={item.title} text={item.text} />
               </motion.div>
             ))}
           </motion.div>
@@ -537,21 +591,40 @@ export default function Home() {
           <motion.div variants={fadeUp}>
             <DarkCard className="p-8">
               <div className="text-sm font-medium uppercase tracking-[0.22em] text-white/40">
-                Что должно вызывать доверие
+                Почему профилю можно доверять
               </div>
               <h3 className="mt-3 text-2xl font-semibold text-white">
-                Спокойная подача, реальная логика, прозрачные метрики
+                Прозрачная логика, понятные сигналы и объяснимые метрики
               </h3>
               <p className="mt-4 text-sm leading-7 text-white/60">
-                Чтобы продукт не выглядел искусственно, важно избегать лишнего
-                футуризма и говорить языком понятной пользы: надёжность,
-                прозрачность, история взаимодействий, качество решений.
+                Доверие возникает тогда, когда пользователь понимает, откуда
+                берётся оценка, какие сигналы на неё влияют и как она меняется
+                со временем.
               </p>
 
               <div className="mt-6 space-y-4">
-                <TrustRow title="Понятный язык" value="92%" width="92%" />
-                <TrustRow title="Прозрачность логики" value="88%" width="88%" />
-                <TrustRow title="Ощущение надёжности" value="94%" width="94%" />
+                <TrustRow title="Понятный язык оценки" value="92%" width="92%" />
+                <TrustRow
+                  title="Прозрачность логики"
+                  value="88%"
+                  width="88%"
+                />
+                <TrustRow
+                  title="Ощущение надёжности"
+                  value="94%"
+                  width="94%"
+                />
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <SmallTrustCard
+                  title="Не только цифра"
+                  text="Профиль показывает основания оценки, а не только итоговый показатель."
+                />
+                <SmallTrustCard
+                  title="История изменений"
+                  text="Пользователь видит динамику, а не получает статичную репутацию."
+                />
               </div>
             </DarkCard>
           </motion.div>
@@ -562,14 +635,16 @@ export default function Home() {
               className="rounded-3xl border border-[#3b82f6]/15 bg-[linear-gradient(180deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.25)] sm:p-8"
             >
               <div className="text-sm font-medium uppercase tracking-[0.22em] text-blue-300">
-                Аналитический слой
+                Как выглядит профиль доверия
               </div>
               <h3 className="mt-3 text-2xl font-semibold text-white">
-                Дашборд помогает показать идею лучше, чем абстрактные обещания
+                Профиль показывает итоговую оценку, ключевые сигналы и динамику
+                доверия
               </h3>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-white/65">
-                Именно визуальная структура метрик, динамики и оснований делает
-                концепцию более убедительной для нового пользователя.
+                Пользователь видит не только итоговый индекс, но и факторы,
+                которые влияют на него: подтверждённые действия, отзывы,
+                стабильность и историю взаимодействий.
               </p>
 
               <motion.div
@@ -640,6 +715,11 @@ export default function Home() {
                   <Bar height="74%" delay={0.3} />
                   <Bar height="84%" highlight delay={0.35} />
                 </div>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <InsightChip text="Основания оценки видны пользователю" />
+                  <InsightChip text="Динамика понятнее статичного рейтинга" />
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -659,7 +739,7 @@ export default function Home() {
                 Сценарии применения
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Там, где решение о доверии влияет на результат
+                Там, где надёжность влияет на итоговое решение
               </h2>
             </motion.div>
 
@@ -674,9 +754,12 @@ export default function Home() {
                     className="overflow-hidden rounded-2xl border border-white/8 bg-[#0c172a] shadow-[0_16px_48px_rgba(0,0,0,0.18)] transition hover:border-white/12"
                   >
                     <div className="border-b border-white/8 bg-white/[0.03] p-5">
-                      <CaseVisual />
+                      <CaseVisual title={item.title} />
                     </div>
                     <div className="p-6">
+                      <div className="mb-3 inline-flex rounded-full border border-white/8 bg-white/[0.04] px-3 py-1 text-xs text-white/50">
+                        сценарий
+                      </div>
                       <h3 className="text-xl font-semibold text-white">
                         {item.title}
                       </h3>
@@ -703,16 +786,31 @@ export default function Home() {
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
             <div>
               <div className="text-sm font-medium uppercase tracking-[0.22em] text-white/40">
-                Позиционирование
+                Подход к продукту
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Этот продукт должен восприниматься как инструмент доверия, а не
-                контроля
+                Продукт помогает принимать более обоснованные решения, а не
+                навешивать ярлыки
               </h2>
               <p className="mt-4 text-white/60">
-                Поэтому сайт построен вокруг спокойной корпоративной подачи,
-                аналитической логики и понятной пользы для реальных решений.
+                Мы делаем акцент на прозрачности, объяснимости и практической
+                пользе. Оценка должна помогать в выборе, а не заменять его.
               </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <ApproachPill
+                  title="Прозрачность"
+                  text="Понятно, откуда берётся оценка"
+                />
+                <ApproachPill
+                  title="Объяснимость"
+                  text="Каждый сигнал можно показать"
+                />
+                <ApproachPill
+                  title="Практичность"
+                  text="Фокус на реальных сценариях"
+                />
+              </div>
             </div>
 
             <motion.div
@@ -720,7 +818,7 @@ export default function Home() {
               className="rounded-2xl border border-white/8 bg-[#08101d] p-6"
             >
               <div className="text-sm text-white/45">
-                Лучшие формулировки для подачи идеи
+                Ключевые формулировки
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 {[
@@ -743,6 +841,17 @@ export default function Home() {
                   </motion.span>
                 ))}
               </div>
+
+              <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+                <div className="text-sm font-medium text-white">
+                  Принцип подачи
+                </div>
+                <p className="mt-2 text-sm leading-7 text-white/58">
+                  Спокойный деловой язык, понятные метрики и минимум лишнего
+                  футуризма. Продукт должен выглядеть надёжно, а не
+                  декоративно.
+                </p>
+              </div>
             </motion.div>
           </div>
         </motion.div>
@@ -761,32 +870,49 @@ export default function Home() {
         >
           <motion.div variants={fadeUp}>
             <div className="text-sm font-medium uppercase tracking-[0.22em] text-white/40">
-              Проверка спроса
+              Ранний доступ
             </div>
             <h2 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-white md:text-4xl">
-              Получите ранний доступ и помогите оценить интерес к концепции
+              Оставьте заявку, чтобы получить ранний доступ к платформе
             </h2>
             <p className="mt-4 max-w-2xl text-white/60">
-              Главный показатель на этом этапе — готовность человека оставить
-              контакт и описать, где ему был бы полезен такой сервис.
+              Оставьте контакт и коротко опишите, где такой сервис был бы
+              полезен именно вам. Это поможет определить первые сценарии
+              запуска.
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <ScoreCard
-                value="10%+"
-                label="минимум"
-                text="есть базовый интерес"
+                value="01"
+                label="первые приглашения"
+                text="по мере формирования раннего доступа"
               />
               <ScoreCard
-                value="20%+"
-                label="хорошо"
-                text="гипотеза выглядит сильной"
+                value="02"
+                label="приоритетные кейсы"
+                text="найм, сделки, аренда и платформы"
               />
               <ScoreCard
-                value="30%+"
-                label="очень хорошо"
-                text="можно идти дальше"
+                value="03"
+                label="обратная связь"
+                text="ранние пользователи влияют на продукт"
               />
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-white/8 bg-[#0c172a] p-5">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-400/10 text-blue-200">
+                  <MailSparkIcon />
+                </div>
+                <div>
+                  <div className="text-base font-semibold text-white">
+                    Что даёт заявка
+                  </div>
+                  <p className="mt-2 text-sm leading-7 text-white/58">
+                    Оставляя заявку, вы не просто получаете ранний доступ — вы помогаете определить, где такой сервис действительно нужен в первую очередь.
+                  </p>
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -1144,17 +1270,6 @@ function ScoreCard({
   );
 }
 
-function ProblemIcon() {
-  return (
-    <div className="relative h-5 w-5">
-      <div className="absolute left-0 top-2 h-2 w-2 rounded-full bg-white/25" />
-      <div className="absolute left-2 top-0 h-2 w-2 rounded-full bg-[#60a5fa]" />
-      <div className="absolute left-4 top-2 h-2 w-2 rounded-full bg-white/35" />
-      <div className="absolute left-2 top-4 h-2 w-2 rounded-full bg-cyan-300/80" />
-    </div>
-  );
-}
-
 function TrustRow({
   title,
   value,
@@ -1333,7 +1448,96 @@ function InfoBox({ title, value }: { title: string; value: string }) {
   );
 }
 
-function CaseVisual() {
+function SignalCard({ title, text }: { title: string; text: string }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 160, damping: 18 }}
+      className="rounded-2xl border border-white/8 bg-[#0c172a] p-5"
+    >
+      <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-400/10 text-blue-200">
+        <SignalIcon />
+      </div>
+      <div className="text-lg font-semibold text-white">{title}</div>
+      <p className="mt-3 text-sm leading-7 text-white/58">{text}</p>
+    </motion.div>
+  );
+}
+
+function SmallTrustCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+      <div className="text-sm font-medium text-white">{title}</div>
+      <p className="mt-2 text-sm leading-6 text-white/55">{text}</p>
+    </div>
+  );
+}
+
+function InsightChip({ text }: { text: string }) {
+  return (
+    <div className="rounded-xl border border-white/8 bg-white/[0.04] px-4 py-3 text-sm text-white/72">
+      {text}
+    </div>
+  );
+}
+
+function ApproachPill({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/8 bg-white/[0.04] p-4">
+      <div className="text-sm font-semibold text-white">{title}</div>
+      <div className="mt-2 text-sm leading-6 text-white/55">{text}</div>
+    </div>
+  );
+}
+
+function QuickSignal({
+  icon,
+  title,
+}: {
+  icon: string;
+  title: string;
+}) {
+  return (
+    <motion.div
+      whileHover={{ y: -3 }}
+      className="flex items-center gap-3 rounded-xl border border-white/8 bg-white/[0.04] px-4 py-3"
+    >
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-sm text-blue-200">
+        {icon}
+      </div>
+      <div className="text-sm text-white/78">{title}</div>
+    </motion.div>
+  );
+}
+
+function MiniScenario({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+      <div className="text-sm font-semibold text-white">{title}</div>
+      <div className="mt-2 text-sm leading-6 text-white/55">{text}</div>
+    </div>
+  );
+}
+
+function CaseVisual({ title }: { title: string }) {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
@@ -1341,6 +1545,9 @@ function CaseVisual() {
     >
       <div className="absolute left-4 top-4 h-10 w-10 rounded-xl bg-white/10" />
       <div className="absolute right-4 top-4 h-8 w-24 rounded-full bg-blue-400/10" />
+      <div className="absolute left-4 top-16 text-xs uppercase tracking-[0.2em] text-white/30">
+        {title}
+      </div>
       <div className="absolute left-4 right-4 top-20 h-12 rounded-xl bg-white/[0.05]" />
       <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 gap-3">
         <div className="h-10 rounded-xl bg-blue-400/10" />
@@ -1348,6 +1555,18 @@ function CaseVisual() {
         <div className="h-10 rounded-xl bg-white/[0.08]" />
       </div>
     </motion.div>
+  );
+}
+
+function GridGlow() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(96,165,250,0.08),transparent_28%)]" />
+      <div className="absolute inset-0 opacity-[0.045] [background-image:linear-gradient(rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:72px_72px]" />
+    </div>
   );
 }
 
@@ -1431,6 +1650,71 @@ function BrandGlyph() {
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function DecisionIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      className="text-current"
+    >
+      <path
+        d="M4 7H20M4 12H14M4 17H10"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function SignalIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      className="text-current"
+    >
+      <path
+        d="M6 12L10 16L18 8"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MailSparkIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      className="text-current"
+    >
+      <path
+        d="M4 7L12 13L20 7"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5 7H19V17H5V7Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
         strokeLinejoin="round"
       />
     </svg>
