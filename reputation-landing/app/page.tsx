@@ -842,7 +842,7 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
+              {/*<div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
                 <div className="text-sm font-medium text-white">
                   Принцип подачи
                 </div>
@@ -851,7 +851,7 @@ export default function Home() {
                   футуризма. Продукт должен выглядеть надёжно, а не
                   декоративно.
                 </p>
-              </div>
+              </div>*/}
             </motion.div>
           </div>
         </motion.div>
