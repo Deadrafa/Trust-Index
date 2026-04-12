@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Trust Index — система репутации",
-  description:
-    "Лендинг для проверки спроса на сервис рейтинга доверия и прозрачной репутации.",
+export const metadata = {
+  title: "Trust Index — платформа оценки доверия",
+  description: "Trust Score, рейтинг надёжности, проверка репутации. MVP платформы доверия.",
+  keywords: [
+    "trust score",
+    "рейтинг доверия",
+    "оценка репутации",
+    "проверка человека",
+    "trust index"
+  ]
 };
 
 export default function RootLayout({
