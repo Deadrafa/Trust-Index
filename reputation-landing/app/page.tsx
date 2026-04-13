@@ -1,6 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import UserReputationCards from "@/components/UserReputationCards";
+import TrustFactorsSection from "@/components/TrustFactorsSection";
+import BeforeAfterSection from "@/components/BeforeAfterSection";
+import ProfileLookupSection from "@/components/ProfileLookupSection";
+import FinalCtaSection from "@/components/FinalCtaSection";
+import ComparisonSection from "@/components/ComparisonSection";
+import ProfileDashboardSection from "@/components/ProfileDashboardSection";
+import EthicsSection from "@/components/EthicsSection";
 import {
   AnimatePresence,
   motion,
@@ -124,6 +132,7 @@ const navItems = [
   { id: "how", label: "Как работает" },
   { id: "cases", label: "Сценарии" },
   { id: "waitlist", label: "Доступ" },
+  { id: "profiles", label: "Профили" },
   { id: "faq", label: "FAQ" },
 ] as const;
 
@@ -726,6 +735,22 @@ export default function Home() {
         </motion.div>
       </section>
 
+      <TrustFactorsSection />
+
+      <section id="profiles">
+        <UserReputationCards />
+      </section>
+
+      <BeforeAfterSection />
+
+      <ProfileLookupSection />
+
+      <ComparisonSection />
+
+      <ProfileDashboardSection />
+
+      <EthicsSection />
+
       <section id="cases" className="border-y border-white/8 bg-[#0b1628]/70">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
           <motion.div
@@ -1041,6 +1066,8 @@ export default function Home() {
           </motion.div>
         </motion.div>
       </section>
+
+      <FinalCtaSection />
 
       <section id="faq" className="border-t border-white/8 bg-[#0b1628]/70">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
