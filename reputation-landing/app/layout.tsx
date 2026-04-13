@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   "user reputation system"
 ],
   icons: {
-    icon: "/icon.png",
+    icon: "/icon.svg",
   },
 };
 
